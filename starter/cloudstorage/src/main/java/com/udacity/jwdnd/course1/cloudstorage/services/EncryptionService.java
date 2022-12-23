@@ -1,16 +1,18 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EncryptionService {
@@ -24,8 +26,12 @@ public class EncryptionService {
             SecretKey secretKey = new SecretKeySpec(key.getBytes(), "AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey);
             encryptedValue = cipher.doFinal(data.getBytes("UTF-8"));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException
+                | NoSuchPaddingException
+                | InvalidKeyException
+                | UnsupportedEncodingException
+                | IllegalBlockSizeException
+                | BadPaddingException e) {
             logger.error(e.getMessage());
         }
 
@@ -40,8 +46,11 @@ public class EncryptionService {
             SecretKey secretKey = new SecretKeySpec(key.getBytes(), "AES");
             cipher.init(Cipher.DECRYPT_MODE, secretKey);
             decryptedValue = cipher.doFinal(Base64.getDecoder().decode(data));
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException
-                | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException
+                | NoSuchPaddingException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException e) {
             logger.error(e.getMessage());
         }
 
