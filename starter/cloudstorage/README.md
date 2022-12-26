@@ -63,8 +63,7 @@ The home page is the center of the application and hosts the three required piec
 
 
  i. Files
-  - The user should be able to upload files and see any files they previously uploaded. 
-
+  - The user should be able to upload files and see any files they previously uploaded.
   - The user should be able to view/download or delete previously-uploaded files.
   - Any errors related to file actions should be displayed. For example, a user should not be able to upload two files with the same name, but they'll never know unless you tell them!
 

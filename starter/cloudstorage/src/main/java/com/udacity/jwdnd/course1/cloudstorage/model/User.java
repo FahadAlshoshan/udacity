@@ -7,18 +7,15 @@ import com.udacity.jwdnd.course1.cloudstorage.validation.UserNameConstraint;
 // @NoArgsConstructor
 public class User {
 
-    private Integer userid;
-
+    private Integer id;
     @UserNameConstraint
     private String username;
-
     private String salt;
     private String password;
     private String firstName;
     private String lastName;
 
-    public User(Integer userid, String username, String salt, String password, String firstName, String lastName) {
-        this.userid = userid;
+    public User(String username, String salt, String password, String firstName, String lastName) {
         this.username = username;
         this.salt = salt;
         this.password = password;
@@ -27,11 +24,11 @@ public class User {
     }
 
     public Integer getUserid() {
-        return userid;
+        return id;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserid(Integer id) {
+        this.id = id;
     }
 
     public String getUsername() {
