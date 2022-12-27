@@ -18,4 +18,10 @@ public interface NoteMapper {
     @Insert("INSERT INTO NOTES (id, title, description, userid) VALUES(#{id}, #{title}, #{description}, #{userId})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Note note);
+
+    @Select("SELECT * FROM NOTES WHERE id = #{id}")
+    Note getNoteById(int id);
+
+    @Update("UPDATE NOTES SET title = #{title}, description = #{description} WHERE id = #{id}")
+    void update(Note note);
 }

@@ -9,18 +9,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/files")
-public class FileController {
+public class FileController implements HandlerExceptionResolver {
     private FileService fileService;
     private UserService userService;
 
@@ -67,14 +71,12 @@ public class FileController {
 
     @GetMapping("/delete")
     private String deleteFile(@RequestParam("fileId") int id, Model model) {
-        List<String> errorMessages = new ArrayList<>();
         try {
             fileService.removeFile(id);
             model.addAttribute("success", true);
             return "result";
         } catch (Exception e) {
-            errorMessages.add("Exception occurred when attempting to delete.");
-            model.addAttribute("errors", errorMessages);
+            model.addAttribute("errors", "Exception occurred when attempting to delete.");
             model.addAttribute("success", false);
             return "result";
         }
@@ -90,5 +92,28 @@ public class FileController {
                 .header("Content-Disposition", "attachment; filename=" + file.getName())
                 .contentType(MediaType.parseMediaType(file.getContentType()))
                 .body(new ByteArrayResource(file.getData()));
+    }
+
+//    @ExceptionHandler({MultipartException.class, MaxUploadSizeExceededException.class})
+    public String handleFileSizeException(RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute(
+                "errors", "Exception occurred when attempting to upload. file size exceeded the limit");
+        redirectAttributes.addAttribute("success", false);
+        return "redirect:/result";
+    }
+
+    @Override
+    public ModelAndView resolveException(
+            HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+        ModelAndView modelAndView = new ModelAndView("redirect:/result");
+        if (e instanceof MaxUploadSizeExceededException) {
+            modelAndView
+                    .getModel()
+                    .put("error", "Exception occurred when attempting to upload. file size exceeded the limit");
+            modelAndView
+                    .getModel()
+                    .put("success", false);
+        }
+        return modelAndView;
     }
 }

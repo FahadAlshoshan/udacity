@@ -17,10 +17,23 @@ public class NoteService {
     public List<Note> getNotes(int userId) {
         return noteMapper.getAllUsersNotes(userId);
     }
-    public void createNote(Note note){
+
+    public Note getNote(int noteId) {
+        return noteMapper.getNoteById(noteId);
+    }
+
+    public void createNote(Note note) {
         noteMapper.insert(note);
     }
-    public void removeNote(int id){
+
+    public void removeNote(int id) {
         noteMapper.delete(id);
+    }
+
+    public void updateNote(Note note) {
+        Note noteFromDB = noteMapper.getNoteById(note.getId());
+        noteFromDB.setTitle(note.getTitle());
+        noteFromDB.setDescription(note.getDescription());
+        noteMapper.update(noteFromDB);
     }
 }

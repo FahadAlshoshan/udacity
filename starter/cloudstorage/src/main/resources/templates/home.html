@@ -114,7 +114,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <fom th:action="@{/notes}" method="POST">
+                                <form th:action="@{/notes}" method="POST">
                                     <input type="hidden" name="noteId" id="note-id">
                                     <div class="form-group">
                                         <label for="note-title" class="col-form-label">Title</label>
@@ -127,7 +127,7 @@
                                                   rows="5" maxlength="1000" required></textarea>
                                     </div>
                                     <button id="noteSubmit" type="submit" class="d-none"></button>
-                                </fom>
+                                </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -156,14 +156,24 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
+                        <tr th:if="${credentials.empty}">
+                            <td>There are no uploaded credentials.</td>
+                        </tr>
+                        <tr th:each="credential : ${credentials}">
                             <td>
-                                <button type="button" class="btn btn-success">Edit</button>
-                                <a class="btn btn-danger">Delete</a>
+                                <button type="button" class="btn btn-success" id="btnEditCredential"
+                                        th:data-password="${@encryptionService.decryptValue(credential.password, credential.key)}"
+                                        th:onclick="showCredentialModal(
+                                                    [[${credential.id}]],
+                                                    [[${credential.url}]],
+                                                    [[${credential.username}]],
+                                                    this.getAttribute('data-password'))">Edit
+                                </button>
+                                <a class="btn btn-danger" th:href="@{/credentials/delete/(credentialId=${credential.id})}">Delete</a>
                             </td>
-                            <th scope="row">Example Credential URL</th>
-                            <td>Example Credential Username</td>
-                            <td>Example Credential Password</td>
+                            <th scope="row" th:text="${credential.url}">URL</th>
+                            <td th:text="${credential.username}">Username</td>
+                            <td th:text="${credential.password}">Password</td>
                         </tr>
                         </tbody>
                     </table>
@@ -180,7 +190,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="#" method="POST">
+                                <form th:action="@{/credentials}" method="POST">
                                     <input type="hidden" name="credentialId" id="credential-id">
                                     <div class="form-group">
                                         <label for="credential-url" class="col-form-label">URL</label>
@@ -236,6 +246,13 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
+
+
+
+
+
+
+
 
 
 
