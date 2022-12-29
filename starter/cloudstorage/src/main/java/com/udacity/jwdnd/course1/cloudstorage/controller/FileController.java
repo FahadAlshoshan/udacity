@@ -105,11 +105,11 @@ public class FileController implements HandlerExceptionResolver {
     @Override
     public ModelAndView resolveException(
             HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/result");
+        ModelAndView modelAndView = new ModelAndView("result");
         if (e instanceof MaxUploadSizeExceededException) {
             modelAndView
                     .getModel()
-                    .put("error", "Exception occurred when attempting to upload. file size exceeded the limit");
+                    .put("errors", "Exception occurred when attempting to upload. file size exceeded the limit");
             modelAndView
                     .getModel()
                     .put("success", false);
